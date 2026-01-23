@@ -153,6 +153,7 @@ log/
 test_output.txt
 temp/
 tmp/
+translation_config.json
 
 # UV lock file (optional, uncomment if you want to ignore it)
 # uv.lock

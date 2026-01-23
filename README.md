@@ -8,6 +8,8 @@ An intelligent web-to-Markdown conversion tool powered by AI-driven content extr
 - 🎯 **Precise Filtering**: Automatically identifies and removes navigation bars, sidebars, footers, and other irrelevant content
 - 📊 **Link Density Analysis**: Accurately distinguishes content areas from navigation using link density algorithms
 - 📝 **Perfect Format Preservation**: Maintains original heading hierarchy, lists, code blocks, and other formatting
+- 🌍 **Multi-language Translation**: Translate extracted content using OpenAI, Gemini, or local Ollama
+- ⚙️ **Flexible Configuration**: Support for multiple API providers with customizable parameters
 - 📅 **Automatic File Management**: Timestamp-based naming with automatic output directory creation
 - 🔍 **Detailed Logging**: All processing steps recorded to log files for debugging and optimization
 - 🔧 **Managed by uv**: Fast and reliable Python package management
@@ -19,6 +21,7 @@ url2md/
 ├── url2md/              # Core conversion module
 │   ├── __init__.py      # Package initialization
 │   ├── converter.py     # Main conversion logic
+│   ├── translator.py    # Translation agent
 │   └── cli.py           # Command-line interface
 ├── tests/               # Test scripts
 │   ├── test_datacamp.py          # DataCamp tests
@@ -28,6 +31,8 @@ url2md/
 ├── log/                 # Debug log directory (auto-created)
 ├── pyproject.toml       # Project configuration and dependencies
 ├── uv.lock              # Dependency lock file
+├── translation_config.example.json  # Translation config example
+├── TRANSLATION_CONFIG.md            # Translation configuration guide
 └── README.md            # Project documentation
 ```
 
@@ -132,6 +137,97 @@ uv run url2md https://example.com/article --output my_docs
 # Show verbose information
 uv run url2md https://example.com/article --verbose
 ```
+
+### Translation Features
+
+**Translate extracted content to different languages using various AI providers:**
+
+```bash
+# Convert and translate with confirmation prompt
+uv run url2md https://example.com/article --translate
+
+# Auto-translate without confirmation (using default OpenAI)
+uv run url2md https://example.com/article --auto-translate --api-key YOUR_API_KEY
+
+# Translate using Ollama (local, no API key needed)
+uv run url2md https://example.com/article --auto-translate --provider ollama
+
+# Translate using Gemini
+uv run url2md https://example.com/article --auto-translate \
+  --provider gemini \
+  --api-key YOUR_GEMINI_KEY \
+  --model gemini-2.0-flash-exp
+
+# Specify target language
+uv run url2md https://example.com/article --auto-translate \
+  --provider ollama \
+  --target-language Japanese
+
+# Use configuration file
+uv run url2md https://example.com/article \
+  --auto-translate \
+  --translation-config translation_config.json
+```
+
+#### Translation Configuration File
+
+Create a `translation_config.json` file:
+
+```json
+{
+  "provider": "openai",
+  "api_key": "your-api-key-here",
+  "model": "gpt-4o-mini",
+  "target_language": "Chinese",
+  "temperature": 0.3,
+  "chunk_size": 3000
+}
+```
+
+**Supported providers:**
+- `openai`: OpenAI API (GPT-4o, GPT-4o-mini, etc.)
+- `gemini`: Google Gemini API (Gemini 2.0 Flash, Gemini 1.5 Pro, etc.)
+- `ollama`: Local Ollama (Llama3.2, Qwen2.5, etc.)
+
+**Supported languages:**
+- Chinese (中文)
+- English
+- Japanese (日语)
+- Korean (韩语)
+- French, German, Spanish, etc.
+
+#### Performance Optimization
+
+If translation is slow or causes high CPU usage:
+
+1. **Use smaller models** (faster):
+   ```bash
+   ollama pull llama3.2:3b
+   uv run url2md URL --auto-translate --provider ollama --model llama3.2:3b
+   ```
+
+2. **Reduce chunk size** (for Ollama):
+   ```json
+   {
+     "chunk_size": 1000,
+     "timeout": 600
+   }
+   ```
+
+3. **Run diagnostic tool**:
+   ```bash
+   uv run python diagnose_translation.py
+   ```
+
+4. **Use cloud APIs** (fastest):
+   ```bash
+   uv run url2md URL --auto-translate --provider openai --api-key YOUR_KEY
+   ```
+
+For detailed performance tuning, see:
+- [TRANSLATION_CONFIG.md](TRANSLATION_CONFIG.md) - Configuration guide
+- [TRANSLATION_PERFORMANCE.md](TRANSLATION_PERFORMANCE.md) - Performance optimization
+- [TRANSLATION_USAGE.md](TRANSLATION_USAGE.md) - Usage examples
 
 ### Output Description
 

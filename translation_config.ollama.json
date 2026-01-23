@@ -1,0 +1,10 @@
+{
+  "provider": "ollama",
+  "api_base": "http://localhost:11434/v1",
+  "model": "qwen2.5:7b",
+  "target_language": "Chinese",
+  "temperature": 0.3,
+  "chunk_size": 1500,
+  "timeout": 600,
+  "max_tokens": 4000
+}
